@@ -1,0 +1,543 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+<!--  <title>[[this.info.up]]录播记录</title>-->
+<script src="../static/js/vue.min.js"></script>
+<script src="../static/js/axios.min.js"></script>
+
+
+
+<style>
+.hidden {
+  display: none;
+}
+
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start; /* 或者使用 space-between 等，根据需要调整 */
+        gap: 20px; /* 设置盒子之间的间隙，根据需要调整 */
+    }
+
+    .box {
+        flex: 1 0 25%; /* 设置为四等分 */
+        height: 240px; /* 增加高度以容纳按钮 */
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        width: 400px;
+        position: relative;
+        padding: 30px; /* 增加内边距 */
+    }
+    .box.watched{
+         flex: 1 0 25%; /* 设置为四等分 */
+        height: 240px; /* 增加高度以容纳按钮 */
+        background-color: #FFDEAD;
+        border: 1px solid #ddd;
+        width: 400px;
+        position: relative;
+        padding: 30px; /* 增加内边距 */
+
+    }
+    .custom-input {
+    border-radius: 5px; /* 设置圆角 */
+    color: black; /* 设置黑色字体 */
+    background-color: white; /* 设置白色背景 */
+    padding: 5px; /* 设置内边距 */
+    border: 1px solid #ccc; /* 设置边框样式 */
+}
+/* 为所有悬浮按钮添加相同的样式 */
+.container_floating {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.floating-button {
+
+
+  margin: 5px;
+  padding: 10px;
+  background-color: #ff6b81;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 260px;
+  right: 30px;
+
+  background-color: #8f4b2e; /* 红色背景 */
+  color: #fff1ff; /* 白色文本 */
+  border: none; /* 无边框 */
+  border-radius: 5px; /* 圆角效果 */
+
+  padding: 4px 7px; /* 内边距 */
+  font-size: 12px; /* 字体大小 */
+  cursor: pointer; /* 鼠标悬停时的光标样式 */
+
+  transition: background-color 0.3s ease; /* 背景色过渡效果 */
+}
+
+/* 当鼠标悬停在按钮上时，改变背景色 */
+.remove-btn:hover {
+  background-color: #ff6b81;
+}
+
+.default-entry{
+
+    color: #000;
+    border-bottom-color: #ff6b81;
+
+    position: absolute;
+    top:260px;
+    left: 30px;
+}
+.progress-bar-container {
+    width: 30%;
+    background-color: #ddd;
+    margin: 20px auto; /* 上下边距 20px，左右自动（居中） */
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative; /* 使得子元素可以相对于它进行定位 */
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #4CAF50;
+    transition: width 0.5s ease-in-out;
+}
+
+.watched_, .total, .percent {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000;
+    font-size: 12px;
+}
+
+.watched_ {
+    left: 10px; /* 左侧留出一些空间 */
+}
+
+.total {
+    left: 100px; /* 根据需要调整 */
+}
+
+.percent {
+    right: 10px; /* 右侧留出一些空间 */
+}
+.floating-pane {
+  margin: 5px;
+  padding: 10px;
+  background-color: rgba(255, 107, 129, 0); /* 设置背景颜色为全透明 */
+  color: white;
+  border: 1px solid rgba(255, 107, 129, 0); /* 设置边框颜色为全透明 */
+  border-radius: 5px;
+  cursor: pointer;
+
+  position: fixed;
+  bottom: 160px; /* 根据需要调整 */
+  right: 70px; /* 根据需要调整 */
+
+  z-index: 1000; /* 确保悬浮平面位于其他内容之上 */
+}
+.floating-pane-userInput {
+  margin: 5px;
+  padding: 10px;
+  background-color: rgba(255, 107, 129, 0); /* 设置背景颜色为全透明 */
+  color: white;
+  border: 1px solid rgba(255, 107, 129, 0); /* 设置边框颜色为全透明 */
+  border-radius: 5px;
+  cursor: pointer;
+
+  position: fixed;
+  bottom: 250px; /* 根据需要调整 */
+  right: 70px; /* 根据需要调整 */
+
+  z-index: 1000; /* 确保悬浮平面位于其他内容之上 */
+}
+
+
+.custom-button {
+
+
+  margin: 0 5px;
+  border-radius: 10px;
+  width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+.custom-button:hover {
+  overflow: visible; /* 鼠标悬停时取消溢出隐藏 */
+}
+
+
+
+</style>
+</head>
+<body>
+  <div id="app">
+
+
+      <div class="progress-bar-container" style="width: 80%; background-color: #ddd; margin-top: 30px; position: relative;">
+
+        <div class="progress-bar" :style="{ width: progressBarWidth, height: '20px', backgroundColor: '#4CAF50' }"></div>
+        <span class="watched_">已观看: [[info.watched]]</span>
+        <span class="total">总计: [[info.total]]</span>
+        <span class="percent">[[info.percent]]</span>
+    </div>
+
+
+<div v-if="showModal" class="floating-pane-userInput" >
+    <input type="text" v-model="userInput" placeholder="请输入内容" class="custom-input">
+    <button @click="saveUserInput" class="custom-button">确认</button>
+</div>
+
+
+<ul class="container">
+
+<div class="box" v-for="(article, key) in articles" :key="key" v-if="article.index !== false" :class="{ 'watched': article.bv === watchedBv }">
+  <h2>[[ article.title ]]</h2>
+  <button class="remove-btn" :bv="article.bv" @click="markAsWatched(article.bv)">看过了</button>
+  <a class="default-entry" target="_blank" @click="openLink(article.bv)">前往录播</a>
+</div>
+</ul>
+
+
+
+
+
+<div class="container_floating">
+  <button class="floating-button" @click="showModal = !showModal">添加</button>
+
+
+  <button class="floating-button" @click="withdraw_data()">撤回</button>
+  <button class="floating-button" @click="toggleFloatingPane()">历史</button>
+
+  <!-- 悬浮平面 -->
+<div v-if="showFloatingPane" class="floating-pane">
+  <!-- 动态生成按钮 -->
+  <button
+    v-for="(item, index) in items"
+    :key="index"
+    @click="bindFunction(item.name)"
+    class="custom-button"> <!-- 添加自定义样式类名 -->
+    [[ item.name]]
+  </button>
+</div>
+
+
+  <button class="floating-button"  @click="updata()">更新</button>
+<!--  <button class="floating-button" title="更新录播记录2" @click="updata_another()">全更</button>-->
+  <button class="floating-button"  @click="backup()">备份</button>
+  <button class="floating-button" @click="startPeriodicPlay()">播放</button>
+</div>
+
+
+  </div>
+
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        articles: {},
+          showFloatingPane: false, // 控制悬浮平面的显示
+           watchedBv: '', // 用于存储从接口获取的bv值
+          audioObject: null, // 添加此行来存储音频对象
+        playCount: 0, // 添加此行来跟踪播放次数
+    intervalId: null, // 用于存储setInterval的ID，以便可以清除它
+        info:{},
+          showModal: false, // 控制动态窗口显示与隐藏
+  userInput: '', // 存储用户输入的内容，
+
+        items: []
+
+      },
+       computed: {
+    // 计算进度百分比
+    percentage() {
+      return this.info.watched && this.info.total ? (this.info.watched / this.info.total) * 100 : 0;
+    },
+    // 计算进度条宽度
+    progressBarWidth() {
+      return `${this.percentage}%`;
+    }
+  },
+          methods: {
+          backup(){
+               axios.post('http://127.0.0.1:5000/backup', {
+                 // data:this.data
+  }) .then(response => {
+
+    })
+    .catch(error => {
+      console.error(error);
+    });
+          },
+    markAsWatched(bv) {
+
+        console.log('当前点击的BV号为：', bv);
+
+      axios.post('http://127.0.0.1:5000/del', {
+        bv: bv,
+
+      })
+      .then(response => {
+            for (let i = 0; i < this.articles.length; i++) {
+      if (this.articles[i].bv === bv) {
+        this.articles[i].index = false;
+        break;
+      }
+    }
+        console.log('Successfully marked as watched:', bv );
+      })
+      .catch(error => {
+        console.error('Error marking as watched:', error);
+      });
+    },
+               openLink(bv) {
+    const url = `https://www.bilibili.com/video/${bv}/?spm_id_from=333.1007.tianma.1-1-1.click&vd_source=9831ff1e13bd364896d273aed32a6278`;
+    window.open(url, '_blank');
+     axios.post('http://127.0.0.1:5000/set_watched', {
+        bv: bv,
+        ser:this.info.ser,
+        up:this.info.up,
+      })
+
+  },
+              get_watched() {
+    axios.post('http://127.0.0.1:5000/get_watched',{
+      ser:this.info.ser
+    })
+    .then(response => {
+      this.watchedBv = response.data; // 更新watchedBv
+        // console.log(response.data.bv)
+    })
+    .catch(error => {
+      console.error("There was an error fetching the watched bv:", error);
+    });
+  },
+       updata(){
+          axios.post('http://127.0.0.1:5000/updata', {
+            up:this.info.up
+  }) .then(response => {
+          this.articles = Object.values(response.data.data).sort((a, b) => a.key - b.key);
+      console.log(this.articles); // 打印返回的JSON数据
+    })
+    .catch(error => {
+      console.error(error);
+    });
+       },
+            saveUserInput() {
+            {
+          axios.post('http://127.0.0.1:5000/update_new', {
+            up:this.userInput
+  }) .then(response => {
+
+          this.articles = Object.values(response.data.data).sort((a, b) => a.key - b.key);
+          this.info=response.data.info;
+          // this.data=response.data
+      console.log(JSON.stringify(this.articles));
+
+           this.updateTitle();
+
+
+    })
+    .catch(error => {
+      console.error(error);
+    });
+       }
+    // 在这里处理用户输入的内容，可以将其存储到 Vue 的变量中
+    console.log('用户输入的内容:', this.userInput);
+
+    // 可以在这里将用户输入的内容存储到其他地方，如数据库或调用其他接口
+    // 也可以根据需要进行其他操作，比如关闭窗口等
+    this.showModal = false; // 关闭窗口
+  },
+    fetchAudio() {
+      axios.get('http://127.0.0.1:5000/wav', {
+        responseType: 'blob' // 确保以blob形式接收响应体
+      })
+      .then(response => {
+        // 创建一个Blob对象，使用响应中的数据
+        const audioBlob = new Blob([response.data], { type: 'audio/wav' });
+        // 使用Blob对象创建一个URL
+        const audioUrl = URL.createObjectURL(audioBlob);
+        // 创建新的Audio对象
+        this.audioObject = new Audio(audioUrl);
+        // 播放音频
+        // this.audioObject.play()
+        // .catch(error => {
+        //   console.log('播放失败', error);
+        // });
+      })
+      .catch(error => {
+        console.error('加载音频文件失败:', error);
+      });
+    },
+    playSavedAudio() {
+      if (this.audioObject) {
+        this.audioObject.play()
+        .catch(error => {
+          console.error('播放音频失败:', error);
+        });
+      } else {
+        console.log('没有加载的音频');
+      }
+    },
+
+          withdraw_data(){
+        axios.post('http://127.0.0.1:5000/withdraw', {
+  }) .then(response => {
+     if (response.data === -1) {
+                console.log("接口返回值为-1，跳过处理");
+                return; // 跳过处理
+            }
+               this.articles = Object.values(response.data.data).sort((a, b) => a.key - b.key);
+          this.info=response.data.info;
+          // this.data=response.data
+      console.log(JSON.stringify(this.articles));
+           this.updateTitle();
+      // console.log(this.articles); // 打印返回的JSON数据
+        this.get_watched()
+
+
+
+    }).catch(error => {
+      console.error(error);
+    });
+
+              },
+              updata_another(){
+          axios.post('http://127.0.0.1:5000/updata_others', {
+  }) .then(response => {
+          this.articles = Object.values(response.data.data).sort((a, b) => a.key - b.key);
+          this.info=response.data.info;
+          // this.data=response.data
+      console.log(JSON.stringify(this.articles));
+           this.updateTitle();
+      // console.log(this.articles); // 打印返回的JSON数据
+        this.get_watched()
+    })
+    .catch(error => {
+      console.error(error);
+    });
+       },
+                  startPeriodicPlay() {
+          if (this.intervalId !== null) {
+            // 如果已经有一个周期性播放正在进行，则先停止它
+            clearInterval(this.intervalId);
+            this.playCount = 0; // 重置播放计数
+          }
+
+          this.intervalId = setInterval(() => {
+            if (this.playCount < 600) {
+              this.playSavedAudio();
+              this.playCount++;
+            } else {
+              clearInterval(this.intervalId); // 停止周期性播放
+              this.intervalId = null; // 重置intervalId
+              console.log('周期性播放结束');
+            }
+          }, 5000); // 每5秒调用一次
+        },
+             updateTitle() {
+      // 动态更新页面标题
+      document.title = `${this.info.up}_录播记录3.0`;
+    },
+             toggleFloatingPane() {
+
+             axios.get('http://127.0.0.1:5000/His', {
+  }) .then(response => {
+      this.items=[]
+      // console.log(response.data); // 打印返回的JSON数据
+      //         console.log(JSON.stringify(this.items))
+
+                  response.data.forEach(item => {
+                  let newItem={}
+                    newItem.name=item
+
+                this.items.push(newItem); // 将新对象添加到items数组中
+
+            });
+           // console.log(JSON.stringify(this.items))
+
+             this.showFloatingPane = !this.showFloatingPane; // 切换悬浮平面的显示状态
+
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+
+
+    },
+    bindFunction(name) {
+      // 在这里根据item.action来决定调用哪个函数
+      console.log(name);
+                axios.post('http://127.0.0.1:5000/locations', {
+                 // data:this.data,
+                  name:name,
+                  articles:this.articles,
+                  info:this.info
+
+  }) .then(response => {
+           this.articles = Object.values(response.data.data).sort((a, b) => a.key - b.key);
+        console.log(JSON.stringify(this.articles));
+          this.info=response.data.info;
+          this.data=response.data
+           this.updateTitle();
+      // console.log(this.articles); // 打印返回的JSON数据
+        this.get_watched()
+        this.fetchAudio()
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+    },
+
+
+
+
+  },
+
+
+
+       created() {
+    axios.post('http://127.0.0.1:5000/Initialize', {
+      // 发送的数据，如果不需要传递数据可以省略
+    })
+    .then(response => {
+          this.articles = Object.values(response.data.data).sort((a, b) => a.key - b.key);
+          this.info=response.data.info;
+          // this.data=response.data
+      console.log(JSON.stringify(this.articles));
+           this.updateTitle();
+      // console.log(this.articles); // 打印返回的JSON数据
+        this.get_watched()
+        this.fetchAudio()
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+,
+
+        delimiters: ['[[', ']]']
+    });
+
+  </script>
+</body>
+</html>
