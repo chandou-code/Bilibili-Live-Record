@@ -59,12 +59,25 @@ def handle_return(loaded_dict):
 
 
 def watched_ud(loaded_dict):
-
     count_false = sum(1 for item in loaded_dict['data'].values() if item.get('index') is False)
     print(count_false)
     loaded_dict['info']['watched'] = count_false
     loaded_dict['info']['total'] = len(loaded_dict['data'])
     loaded_dict['info']['percent'] = f"{round(count_false / len(loaded_dict['data']) * 100, 1)}%"
+
+    return loaded_dict
+
+
+def watched_dic(loaded_dict):
+    count = 0
+    for item in loaded_dict['data']:
+        if item['index'] == False:
+            count += 1
+
+
+    loaded_dict['info']['watched'] = count
+    loaded_dict['info']['total'] = len(loaded_dict['data'])
+    loaded_dict['info']['percent'] = f"{round(count / len(loaded_dict['data']) * 100, 1)}%"
 
     return loaded_dict
 
@@ -96,15 +109,21 @@ def Del():
     print(bv)
 
     loaded_dict = read_data()
-    
+
     withdraw_data.save_withdraw_data()
     index = None
     for i, item in enumerate(loaded_dict['data']):
-
-        if item == bv:
-            loaded_dict['data'][item]['index'] = False
-            save_data(watched_ud(loaded_dict))
-            return jsonify('success')
+        print(item, bv, type(item))
+        if type(item) == dict:
+            if item.get('bv') == bv:
+                loaded_dict['data'][i]['index'] = False
+                save_data(watched_dic(loaded_dict))
+                return jsonify('success2')
+        else:
+            if item == bv:
+                loaded_dict['data'][item]['index'] = False
+                save_data(watched_ud(loaded_dict))
+                return jsonify('success1')
 
     if index is not None:
         pass
