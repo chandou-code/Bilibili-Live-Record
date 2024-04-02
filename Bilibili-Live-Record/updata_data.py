@@ -10,7 +10,8 @@ def get_all_pn(pn, mid, series_id):
     # url = f'https://api.bilibili.com/x/series/archives?mid=11073&series_id=407852&only_normal=true&sort=desc&pn={pn}&ps=30&current_mid=12310947'
     url = f'https://api.bilibili.com/x/series/archives?mid={mid}&series_id={series_id}&only_normal=true&sort=desc&pn={pn}&ps=30&current_mid=12310947'
     headers = {
-        'Cookie': r"buvid_fp_plain=undefined; i-wanna-go-back=-1; buvid4=3A8B56F1-EDA5-71EF-4695-376711789D2885279-022101300-3SvbbFkocEboIDHoVtJIDA%3D%3D; is-2022-channel=1; DedeUserID=12310947; DedeUserID__ckMd5=99ff7d744bdbd759; balh_server_inner=__custom__; balh_is_closed=; CURRENT_PID=29417650-c7fe-11ed-b749-056175902ecd; FEED_LIVE_VERSION=V_NO_BANNER_3; hit-new-style-dyn=1; _uuid=4E4EFBA7-9B2D-C25E-1483-6DE48710F7B8E42648infoc; enable_web_push=DISABLE; header_theme_version=CLOSE; buvid3=37A8CC2D-25BD-E2A9-32C5-DC9E919079F867049infoc; b_nut=1699776965; home_feed_column=4; LIVE_BUVID=AUTO5817028189331843; rpdid=|(J|)Y)RJ~k|0J'u~|JuJmm|Y; CURRENT_FNVAL=4048; CURRENT_QUALITY=64; hit-dyn-v2=1; browser_resolution=1106-630; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDczMjYyODAsImlhdCI6MTcwNzA2NzAyMCwicGx0IjotMX0.m3mvEeR6qOoreT_gYd9v9VZGcexv53VHQpfm9e8hwig; bili_ticket_expires=1707326220; SESSDATA=91229f92%2C1722623645%2Cf2dcc%2A21CjA03k_nUvCuePARzAg6H6f_7gmFzKQ1Z_C6YNOD1keUR9-gEIwQkQVUN81eHX_lpOwSVnVSXzZWXzZ3X2VlekNlc0FqYUE2M2tUQUlLLWROV2Jpc2gtazhza192VUFBUVVpcnRmU091bVdwcW9DVmhpQTF1WTV5X1dESkJBVUNYdUZyVlpBcGF3IIEC; bili_jct=245bdf0fc62780c65d24b51ac3a7d278; fingerprint=f21cedf11a8c1f463fafc6362cd672e9; buvid_fp=f21cedf11a8c1f463fafc6362cd672e9; PVID=2; b_lsid=68A39B47_18D83F458B3; bp_video_offset_12310947=895403799678550022; sid=dlkzeu6a",
+        'Cookie':此处填自己的Cookie ,
+    
         'User-Agent': r"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
 
     }
@@ -28,7 +29,7 @@ def get_name_mid(keyword):
 
     url = f'https://search.bilibili.com/upuser?keyword={keyword}&from_source=webtop_search&spm_id_from=333.1007&search_source=5'
     headers = {
-        'Cookie': r"buvid_fp_plain=undefined; i-wanna-go-back=-1; buvid4=3A8B56F1-EDA5-71EF-4695-376711789D2885279-022101300-3SvbbFkocEboIDHoVtJIDA%3D%3D; is-2022-channel=1; DedeUserID=12310947; DedeUserID__ckMd5=99ff7d744bdbd759; balh_server_inner=__custom__; balh_is_closed=; CURRENT_PID=29417650-c7fe-11ed-b749-056175902ecd; FEED_LIVE_VERSION=V_NO_BANNER_3; hit-new-style-dyn=1; _uuid=4E4EFBA7-9B2D-C25E-1483-6DE48710F7B8E42648infoc; enable_web_push=DISABLE; header_theme_version=CLOSE; buvid3=37A8CC2D-25BD-E2A9-32C5-DC9E919079F867049infoc; b_nut=1699776965; home_feed_column=4; LIVE_BUVID=AUTO5817028189331843; rpdid=|(J|)Y)RJ~k|0J'u~|JuJmm|Y; CURRENT_FNVAL=4048; CURRENT_QUALITY=64; hit-dyn-v2=1; browser_resolution=1106-630; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDczMjYyODAsImlhdCI6MTcwNzA2NzAyMCwicGx0IjotMX0.m3mvEeR6qOoreT_gYd9v9VZGcexv53VHQpfm9e8hwig; bili_ticket_expires=1707326220; SESSDATA=91229f92%2C1722623645%2Cf2dcc%2A21CjA03k_nUvCuePARzAg6H6f_7gmFzKQ1Z_C6YNOD1keUR9-gEIwQkQVUN81eHX_lpOwSVnVSXzZWXzZ3X2VlekNlc0FqYUE2M2tUQUlLLWROV2Jpc2gtazhza192VUFBUVVpcnRmU091bVdwcW9DVmhpQTF1WTV5X1dESkJBVUNYdUZyVlpBcGF3IIEC; bili_jct=245bdf0fc62780c65d24b51ac3a7d278; fingerprint=f21cedf11a8c1f463fafc6362cd672e9; buvid_fp=f21cedf11a8c1f463fafc6362cd672e9; PVID=2; b_lsid=68A39B47_18D83F458B3; bp_video_offset_12310947=895403799678550022; sid=dlkzeu6a",
+        'Cookie': 此处填自己的Cookie,
         'User-Agent': r"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
 
     }
@@ -53,7 +54,7 @@ def get_ser(up):
     # print(uid)
     url = f'https://api.bilibili.com/x/polymer/web-space/seasons_series_list?mid={uid}&page_num=1&page_size=20&web_location=333.999&w_rid=ac2956f6caa2c1752a95cc390e9e7b8c&wts=1709695118'
     headers = {
-        'Cookie': r"buvid_fp_plain=undefined; i-wanna-go-back=-1; buvid4=3A8B56F1-EDA5-71EF-4695-376711789D2885279-022101300-3SvbbFkocEboIDHoVtJIDA%3D%3D; is-2022-channel=1; DedeUserID=12310947; DedeUserID__ckMd5=99ff7d744bdbd759; balh_server_inner=__custom__; balh_is_closed=; CURRENT_PID=29417650-c7fe-11ed-b749-056175902ecd; FEED_LIVE_VERSION=V_NO_BANNER_3; hit-new-style-dyn=1; _uuid=4E4EFBA7-9B2D-C25E-1483-6DE48710F7B8E42648infoc; enable_web_push=DISABLE; header_theme_version=CLOSE; buvid3=37A8CC2D-25BD-E2A9-32C5-DC9E919079F867049infoc; b_nut=1699776965; home_feed_column=4; LIVE_BUVID=AUTO5817028189331843; rpdid=|(J|)Y)RJ~k|0J'u~|JuJmm|Y; CURRENT_FNVAL=4048; CURRENT_QUALITY=64; hit-dyn-v2=1; browser_resolution=1106-630; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDczMjYyODAsImlhdCI6MTcwNzA2NzAyMCwicGx0IjotMX0.m3mvEeR6qOoreT_gYd9v9VZGcexv53VHQpfm9e8hwig; bili_ticket_expires=1707326220; SESSDATA=91229f92%2C1722623645%2Cf2dcc%2A21CjA03k_nUvCuePARzAg6H6f_7gmFzKQ1Z_C6YNOD1keUR9-gEIwQkQVUN81eHX_lpOwSVnVSXzZWXzZ3X2VlekNlc0FqYUE2M2tUQUlLLWROV2Jpc2gtazhza192VUFBUVVpcnRmU091bVdwcW9DVmhpQTF1WTV5X1dESkJBVUNYdUZyVlpBcGF3IIEC; bili_jct=245bdf0fc62780c65d24b51ac3a7d278; fingerprint=f21cedf11a8c1f463fafc6362cd672e9; buvid_fp=f21cedf11a8c1f463fafc6362cd672e9; PVID=2; b_lsid=68A39B47_18D83F458B3; bp_video_offset_12310947=895403799678550022; sid=dlkzeu6a",
+        'Cookie':此处填自己的Cookie,
         'User-Agent': r"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
 
     }
